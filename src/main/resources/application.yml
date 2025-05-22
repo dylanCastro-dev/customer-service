@@ -1,20 +1,5 @@
 spring:
   application:
     name: customer-service
-
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/customerdb
-
-  cloud:
-    config:
-      enabled: false
-  #config:
-    #import: "configserver:http://localhost:8888"  # Solo si estás usando config-server
-
-server:
-  port: 8080
-
-logging:
-  level:
-    root: INFO
+  config:
+    import: "configserver:http://localhost:8888"
