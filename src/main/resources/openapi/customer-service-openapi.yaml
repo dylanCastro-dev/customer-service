@@ -1,0 +1,139 @@
+openapi: 3.0.3
+info:
+  title: Customer Service API
+  description: API para la gestión de clientes personales y empresariales.
+  version: 1.0.0
+
+paths:
+  /customers:
+    get:
+      summary: Listar todos los clientes
+      description: Devuelve todos los clientes registrados, tanto personales como empresariales.
+      operationId: getAllCustomers
+      responses:
+        '200':
+          description: Lista de clientes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+    post:
+      summary: Crear un nuevo cliente
+      description: Registra un nuevo cliente personal o empresarial en el sistema.
+      operationId: createCustomer
+      requestBody:
+        description: Datos del cliente a registrar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerBody'
+      responses:
+        '200':
+          description: Cliente creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+
+  /customers/{id}:
+    get:
+      summary: Obtener un cliente por ID
+      description: Devuelve la información de un cliente específico usando su ID.
+      operationId: getCustomerById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID del cliente a buscar
+      responses:
+        '200':
+          description: Cliente encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+
+    put:
+      summary: Actualizar un cliente
+      description: Modifica los datos de un cliente existente a partir de su ID.
+      operationId: updateCustomer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID del cliente a actualizar
+      requestBody:
+        description: Nuevos datos del cliente
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerBody'
+      responses:
+        '200':
+          description: Cliente actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+
+    delete:
+      summary: Eliminar un cliente
+      description: Elimina un cliente del sistema por su ID.
+      operationId: deleteCustomer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID del cliente a eliminar
+      responses:
+        '200':
+          description: Cliente eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+
+components:
+  schemas:
+    CustomerBody:
+      type: object
+      description: Datos de entrada para registrar o actualizar un cliente
+      properties:
+        name:
+          type: string
+          description: Nombre completo del cliente
+          example: Juan Pérez
+        documentNumber:
+          type: string
+          description: Número de documento del cliente
+          example: 12345678
+        type:
+          type: string
+          description: Tipo de cliente
+          example: "[PERSONAL, BUSINESS]"
+
+    CustomerResponse:
+      type: object
+      description: Respuesta procesada de clientes
+      properties:
+        status:
+          type: integer
+          description: Código HTTP de respuesta
+          example: 200
+        message:
+          type: string
+          description: Mensaje asociado a la operación
+          example: Cliente procesado correctamente
+        customers:
+          type: array
+          description: Lista de clientes registrados
+          items:
+            $ref: '#/components/schemas/CustomerBody'

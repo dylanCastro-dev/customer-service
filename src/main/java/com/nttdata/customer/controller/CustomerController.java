@@ -1,58 +1,76 @@
 package com.nttdata.customer.controller;
 
-import com.nttdata.customer.model.Customer;
 import com.nttdata.customer.service.CustomerService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
+import com.nttdata.customer.utils.Constants;
+import com.nttdata.customer.utils.CustomerMapper;
+import com.nttdata.customer.utils.Utils;
 import lombok.RequiredArgsConstructor;
+import org.openapitools.api.CustomersApi;
+import org.openapitools.model.CustomerBody;
+import org.openapitools.model.CustomerResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/customers")
 @RequiredArgsConstructor
-public class CustomerController {
+public class CustomerController implements CustomersApi {
 
-    private final CustomerService customerService;
+    private static final Logger log = LoggerFactory.getLogger(CustomerController.class);
 
-    @Operation(summary = "Listar todos los clientes", description = "Devuelve todos los clientes registrados, tanto personales como empresariales")
-    @GetMapping
-    public Flux<Customer> getAll() {
-        return customerService.getAllCustomers();
+    private final CustomerService service;
+
+    @Override
+    public Mono<ResponseEntity<CustomerResponse>> getAllCustomers(ServerWebExchange exchange) {
+        return service.getAllCustomers()
+                .collectList()
+                .map(customers -> CustomerMapper.toResponse(customers, 200, Constants.SUCCESS_FIND_LIST_CUSTOMER))
+                .map(ResponseEntity::ok);
     }
 
-    @Operation(summary = "Obtener un cliente por ID", description = "Devuelve la información de un cliente específico usando su ID")
-    @GetMapping("/{id}")
-    public Mono<Customer> getById(
-            @Parameter(description = "ID del cliente a buscar", required = true)
-            @PathVariable String id) {
-        return customerService.getCustomerById(id);
+    @Override
+    public Mono<ResponseEntity<CustomerResponse>> getCustomerById(String id, ServerWebExchange exchange) {
+        return service.getCustomerById(id)
+                .map(customer -> CustomerMapper.toResponse(customer, 200, Constants.SUCCESS_FIND_CUSTOMER))
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(CustomerMapper.toResponse(404, Constants.ERROR_FIND_CUSTOMER)));
     }
 
-    @Operation(summary = "Crear un nuevo cliente", description = "Registra un nuevo cliente personal o empresarial en el sistema")
-    @PostMapping
-    public Mono<Customer> create(
-            @Parameter(description = "Datos del cliente a registrar", required = true)
-            @RequestBody Customer customer) {
-        return customerService.createCustomer(customer);
+    @Override
+    public Mono<ResponseEntity<CustomerResponse>> createCustomer(
+            @RequestBody Mono<CustomerBody> request, ServerWebExchange exchange) {
+
+        return request
+                .doOnNext(req -> log.debug("Request recibido: {}", req))
+                .doOnNext(Utils::validateCustomerBody)
+                .map(CustomerMapper::toCustomer)
+                .flatMap(service::createCustomer)
+                .map(customer -> CustomerMapper.toResponse(customer, 201, Constants.SUCCESS_CREATE_CUSTOMER))
+                .map(ResponseEntity::ok);
     }
 
-    @Operation(summary = "Actualizar un cliente", description = "Modifica los datos de un cliente existente a partir de su ID")
-    @PutMapping("/{id}")
-    public Mono<Customer> update(
-            @Parameter(description = "ID del cliente a actualizar", required = true)
-            @PathVariable String id,
-            @Parameter(description = "Nuevos datos del cliente", required = true)
-            @RequestBody Customer customer) {
-        return customerService.updateCustomer(id, customer);
+    @Override
+    public Mono<ResponseEntity<CustomerResponse>> updateCustomer(
+            String id, @RequestBody Mono<CustomerBody> request, ServerWebExchange exchange) {
+
+        return request
+                .doOnNext(req -> log.debug("Request recibido: {}", req))
+                .doOnNext(Utils::validateCustomerBody)
+                .map(CustomerMapper::toCustomer)
+                .flatMap(customer -> service.updateCustomer(id, customer))
+                .map(updated -> CustomerMapper.toResponse(updated, 200, Constants.SUCCESS_UPDATE_CUSTOMER))
+                .map(ResponseEntity::ok);
     }
 
-    @Operation(summary = "Eliminar un cliente", description = "Elimina un cliente del sistema por su ID")
-    @DeleteMapping("/{id}")
-    public Mono<Void> delete(
-            @Parameter(description = "ID del cliente a eliminar", required = true)
-            @PathVariable String id) {
-        return customerService.deleteCustomer(id);
+    @Override
+    public Mono<ResponseEntity<CustomerResponse>> deleteCustomer(String id, ServerWebExchange exchange) {
+        return service.deleteCustomer(id)
+                .thenReturn(CustomerMapper.toResponse(200, Constants.SUCCESS_DELETE_CUSTOMER))
+                .map(ResponseEntity::ok);
     }
 }

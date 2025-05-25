@@ -1,5 +1,6 @@
 package com.nttdata.customer.model;
 
+import com.nttdata.customer.model.Type.CustomerType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.data.annotation.Id;

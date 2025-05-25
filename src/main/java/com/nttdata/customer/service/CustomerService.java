@@ -1,41 +1,44 @@
 package com.nttdata.customer.service;
 
 import com.nttdata.customer.model.Customer;
-import com.nttdata.customer.repository.CustomerRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Service
-@RequiredArgsConstructor
-public class CustomerService {
 
-    private final CustomerRepository customerRepository;
+public interface CustomerService {
 
-    public Flux<Customer> getAllCustomers() {
-        return customerRepository.findAll();
-    }
+    /**
+     * Obtiene todos los clientes registrados.
+     * @return una secuencia reactiva de clientes.
+     */
+    Flux<Customer> getAllCustomers();
 
-    public Mono<Customer> getCustomerById(String id) {
-        return customerRepository.findById(id);
-    }
+    /**
+     * Obtiene un cliente por su identificador.
+     * @param id identificador del cliente.
+     * @return un cliente si existe, de lo contrario un Mono vacío.
+     */
+    Mono<Customer> getCustomerById(String id);
 
-    public Mono<Customer> createCustomer(Customer customer) {
-        return customerRepository.save(customer);
-    }
+    /**
+     * Crea un nuevo cliente.
+     * @param customer objeto cliente a crear.
+     * @return el cliente creado.
+     */
+    Mono<Customer> createCustomer(Customer customer);
 
-    public Mono<Customer> updateCustomer(String id, Customer customer) {
-        return customerRepository.findById(id)
-                .flatMap(existing -> {
-                    existing.setName(customer.getName());
-                    existing.setDocumentNumber(customer.getDocumentNumber());
-                    existing.setType(customer.getType());
-                    return customerRepository.save(existing);
-                });
-    }
+    /**
+     * Actualiza un cliente existente por ID.
+     * @param id identificador del cliente a actualizar.
+     * @param customer objeto con los datos actualizados.
+     * @return el cliente actualizado.
+     */
+    Mono<Customer> updateCustomer(String id, Customer customer);
 
-    public Mono<Void> deleteCustomer(String id) {
-        return customerRepository.deleteById(id);
-    }
+    /**
+     * Elimina un cliente por su ID.
+     * @param id identificador del cliente a eliminar.
+     * @return una señal de finalización.
+     */
+    Mono<Void> deleteCustomer(String id);
 }
