@@ -6,6 +6,8 @@ public class Constants {
     public static final String SUCCESS_CREATE_CUSTOMER = "Cliente creado exitosamente";
     public static final String SUCCESS_UPDATE_CUSTOMER = "Cliente actualizado exitosamente";
     public static final String SUCCESS_DELETE_CUSTOMER = "Cliente eliminado exitosamente";
+    public static final String ERROR_INTERNAL  = "Hubo un problema con la solicitud";
+    public static final String ERROR_VALIDATION_MESSAGE = "Error de validación: %s";
 
     public static final String ERROR_FIND_CUSTOMER = "No se encontró el cliente con el ID proporcionado";
 }
