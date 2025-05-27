@@ -1,6 +1,7 @@
 package com.nttdata.customer.utils;
 
 import org.openapitools.model.CustomerResponse;
+import org.openapitools.model.TemplateResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -13,22 +14,22 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<CustomerResponse> handleIllegalArgument(IllegalArgumentException e) {
+    public ResponseEntity<TemplateResponse> handleIllegalArgument(IllegalArgumentException e) {
         log.warn("Error de validación: {}", e.getMessage());
         return ResponseEntity
                 .badRequest()
-                .body(new CustomerResponse()
+                .body(new TemplateResponse()
                         .status(400)
-                        .message(Constants.ERROR_VALIDATION_MESSAGE)
+                        .message(String.format(Constants.ERROR_VALIDATION_MESSAGE, e.getMessage()))
                         .customers(null));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<CustomerResponse> handleGeneralException(Exception e) {
+    public ResponseEntity<TemplateResponse> handleGeneralException(Exception e) {
         log.error("Error inesperado: ", e);
         return ResponseEntity
                 .status(500)
-                .body(new CustomerResponse()
+                .body(new TemplateResponse()
                         .status(500)
                         .message(Constants.ERROR_INTERNAL)
                         .customers(null));

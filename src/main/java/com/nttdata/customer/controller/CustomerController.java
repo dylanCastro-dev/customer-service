@@ -7,7 +7,8 @@ import com.nttdata.customer.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.openapitools.api.CustomersApi;
 import org.openapitools.model.CustomerBody;
-import org.openapitools.model.CustomerResponse;
+import org.openapitools.model.TemplateResponse;
+import org.openapitools.model.TemplateResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class CustomerController implements CustomersApi {
     private final CustomerService service;
 
     @Override
-    public Mono<ResponseEntity<CustomerResponse>> getAllCustomers(ServerWebExchange exchange) {
+    public Mono<ResponseEntity<TemplateResponse>> getAllCustomers(ServerWebExchange exchange) {
         return service.getAllCustomers()
                 .collectList()
                 .map(customers -> CustomerMapper.toResponse(customers, 200, Constants.SUCCESS_FIND_LIST_CUSTOMER))
@@ -33,7 +34,7 @@ public class CustomerController implements CustomersApi {
     }
 
     @Override
-    public Mono<ResponseEntity<CustomerResponse>> getCustomerById(String id, ServerWebExchange exchange) {
+    public Mono<ResponseEntity<TemplateResponse>> getCustomerById(String id, ServerWebExchange exchange) {
         return service.getCustomerById(id)
                 .map(customer -> CustomerMapper.toResponse(customer, 200, Constants.SUCCESS_FIND_CUSTOMER))
                 .map(ResponseEntity::ok)
@@ -42,7 +43,7 @@ public class CustomerController implements CustomersApi {
     }
 
     @Override
-    public Mono<ResponseEntity<CustomerResponse>> createCustomer(
+    public Mono<ResponseEntity<TemplateResponse>> createCustomer(
             @RequestBody Mono<CustomerBody> request, ServerWebExchange exchange) {
 
         return request
@@ -55,7 +56,7 @@ public class CustomerController implements CustomersApi {
     }
 
     @Override
-    public Mono<ResponseEntity<CustomerResponse>> updateCustomer(
+    public Mono<ResponseEntity<TemplateResponse>> updateCustomer(
             String id, @RequestBody Mono<CustomerBody> request, ServerWebExchange exchange) {
 
         return request
@@ -68,7 +69,7 @@ public class CustomerController implements CustomersApi {
     }
 
     @Override
-    public Mono<ResponseEntity<CustomerResponse>> deleteCustomer(String id, ServerWebExchange exchange) {
+    public Mono<ResponseEntity<TemplateResponse>> deleteCustomer(String id, ServerWebExchange exchange) {
         return service.deleteCustomer(id)
                 .thenReturn(CustomerMapper.toResponse(200, Constants.SUCCESS_DELETE_CUSTOMER))
                 .map(ResponseEntity::ok);

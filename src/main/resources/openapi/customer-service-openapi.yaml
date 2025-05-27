@@ -16,7 +16,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerResponse'
+                $ref: '#/components/schemas/TemplateResponse'
     post:
       summary: Crear un nuevo cliente
       description: Registra un nuevo cliente personal o empresarial en el sistema.
@@ -34,7 +34,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerResponse'
+                $ref: '#/components/schemas/TemplateResponse'
 
   /customers/{id}:
     get:
@@ -54,7 +54,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerResponse'
+                $ref: '#/components/schemas/TemplateResponse'
 
     put:
       summary: Actualizar un cliente
@@ -80,7 +80,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerResponse'
+                $ref: '#/components/schemas/TemplateResponse'
 
     delete:
       summary: Eliminar un cliente
@@ -99,7 +99,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerResponse'
+                $ref: '#/components/schemas/TemplateResponse'
 
 components:
   schemas:
@@ -122,6 +122,26 @@ components:
 
     CustomerResponse:
       type: object
+      description: Datos de entrada para registrar o actualizar un cliente
+      properties:
+        id:
+          type: string
+          example: 663032b0ac82a12a8445a9d1
+        name:
+          type: string
+          description: Nombre completo del cliente
+          example: Juan Pérez
+        documentNumber:
+          type: string
+          description: Número de documento del cliente
+          example: 12345678
+        type:
+          type: string
+          description: Tipo de cliente
+          example: "[PERSONAL, BUSINESS]"
+
+    TemplateResponse:
+      type: object
       description: Respuesta procesada de clientes
       properties:
         status:
@@ -136,4 +156,4 @@ components:
           type: array
           description: Lista de clientes registrados
           items:
-            $ref: '#/components/schemas/CustomerBody'
+            $ref: '#/components/schemas/CustomerResponse'
