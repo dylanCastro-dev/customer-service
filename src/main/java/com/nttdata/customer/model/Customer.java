@@ -2,7 +2,11 @@ package com.nttdata.customer.model;
 
 import com.nttdata.customer.model.Type.CustomerType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,7 +19,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Customer {
 
     @Id
-    @Schema(description = "ID único del cliente", example = "663022faca038d5f3b9e02bc", accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(description = "ID único del cliente", example = "663022f3802bc", accessMode = Schema.AccessMode.READ_ONLY)
     private String id;
 
     @Schema(description = "Nombre completo del cliente", example = "Juan Pérez", required = true)

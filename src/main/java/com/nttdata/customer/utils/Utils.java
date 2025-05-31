@@ -4,8 +4,6 @@ import org.openapitools.model.CustomerBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
-
 public class Utils {
     private static final Logger log = LoggerFactory.getLogger(Utils.class);
 
