@@ -1,6 +1,7 @@
 
 import com.nttdata.customer.model.Customer;
 import com.nttdata.customer.model.Type.CustomerType;
+import com.nttdata.customer.model.Type.ProfileType;
 import com.nttdata.customer.repository.CustomerRepository;
 import com.nttdata.customer.service.impl.CustomerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,7 @@ class CustomerServiceImplTest {
         customer.setName("Juan");
         customer.setDocumentNumber("12345678");
         customer.setType(CustomerType.PERSONAL);
+        customer.setProfile(ProfileType.VIP);
     }
 
     /**
@@ -87,6 +89,7 @@ class CustomerServiceImplTest {
         updated.setName("Ana");
         updated.setDocumentNumber("87654321");
         updated.setType(CustomerType.BUSINESS);
+        updated.setProfile(ProfileType.VIP);
 
         when(customerRepository.findById("1")).thenReturn(Mono.just(customer));
         when(customerRepository.save(any())).thenReturn(Mono.just(updated));

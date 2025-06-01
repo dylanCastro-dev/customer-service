@@ -3,6 +3,7 @@ package com.nttdata.customer.utils;
 
 import com.nttdata.customer.model.Customer;
 import com.nttdata.customer.model.Type.CustomerType;
+import com.nttdata.customer.model.Type.ProfileType;
 import org.openapitools.model.CustomerBody;
 import org.openapitools.model.CustomerResponse;
 import org.openapitools.model.CustomerResponse;
@@ -21,7 +22,8 @@ public class CustomerMapper {
                 .id(customer.getId())
                 .name(customer.getName())
                 .documentNumber(customer.getDocumentNumber())
-                .type(customer.getType().name());
+                .type(customer.getType().name())
+                .profile(customer.getProfile().name());
     }
 
     /**
@@ -32,6 +34,7 @@ public class CustomerMapper {
                 .name(body.getName())
                 .documentNumber(body.getDocumentNumber())
                 .type(CustomerType.valueOf(body.getType()))
+                .profile(ProfileType.valueOf(body.getProfile()))
                 .build();
     }
 

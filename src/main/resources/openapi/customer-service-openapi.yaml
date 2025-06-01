@@ -119,6 +119,10 @@ components:
           type: string
           description: Tipo de cliente
           example: "[PERSONAL, BUSINESS]"
+        profile:
+          type: string
+          description: Tipo de perfil
+          example: "[STANDAR, VIP, PYME]"
 
     CustomerResponse:
       type: object
@@ -139,6 +143,10 @@ components:
           type: string
           description: Tipo de cliente
           example: "[PERSONAL, BUSINESS]"
+        profile:
+          type: string
+          description: Tipo de perfil
+          example: "[STANDAR, VIP, PYME]"
 
     TemplateResponse:
       type: object
